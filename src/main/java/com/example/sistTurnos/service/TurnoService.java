@@ -70,11 +70,12 @@ public class TurnoService {
     }
 
     public CancelarTurnoDto cancelarTurno(TurnoDto turnoDto){
-            if (idTurno !=null && obtenerPorId(idTurno) != null){
-        Turno turno = obtenerPorId(idTurno).get();
-
+        Long idTurno = turnoDto.getIdTurno();
+        if (idTurno != null && obtenerPorId(idTurno).isPresent()){
+            Turno turno = obtenerPorId(idTurno).get();
+            // TODO: Implementar lógica de cancelación
         }
-
-}
+        return null;
+    }
 }
 

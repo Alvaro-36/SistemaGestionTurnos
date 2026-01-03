@@ -1,17 +1,12 @@
 package com.example.sistTurnos.model;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.Builder;
-import lombok.AllArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
 @Entity
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -45,6 +40,6 @@ public class Turno implements Comparable<Turno> {
 
     @Override
     public int compareTo(Turno o) {
-        return getFechaHoraInicioTurno().compareTo(o.getFechaHoraInicioTurno());
+        return this.getFechaHoraInicioTurno().compareTo(o.getFechaHoraInicioTurno());
     }
 }
