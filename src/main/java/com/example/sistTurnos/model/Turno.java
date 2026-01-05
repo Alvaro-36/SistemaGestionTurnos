@@ -42,4 +42,5 @@ public class Turno implements Comparable<Turno> {
     public int compareTo(Turno o) {
         return this.getFechaHoraInicioTurno().compareTo(o.getFechaHoraInicioTurno());
     }
+
 }
