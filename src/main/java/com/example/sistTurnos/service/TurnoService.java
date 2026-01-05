@@ -49,7 +49,7 @@ public class TurnoService {
 
         //Buscar Cliente por id
         Cliente clienteTurno = clienteRepository.findById(turnoDto.getIdCliente())
-                .orElseThrow(() -> new ClienteNoExistenteException("Cliente no encontrado"));
+                .orElseThrow(() -> new ClienteNoExistenteException(turnoDto.getIdCliente()));
         
         // Convertir el String de fechaHoraInicioTurno a LocalDateTime
         LocalDateTime fechaHoraInicio = LocalDateTime.parse(turnoDto.getFechaHoraInicioTurno());
