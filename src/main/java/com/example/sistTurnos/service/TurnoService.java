@@ -4,11 +4,8 @@ import com.example.sistTurnos.dto.CancelarTurnoDto;
 import com.example.sistTurnos.dto.TurnoDTOResponse;
 import com.example.sistTurnos.dto.TurnoDto;
 import com.example.sistTurnos.exception.HorarioNoDisponibleException;
-import com.example.sistTurnos.model.JornadaLaboral;
-import com.example.sistTurnos.model.TimeRange;
-import com.example.sistTurnos.model.TipoTurno;
-import com.example.sistTurnos.model.Turno;
 import com.example.sistTurnos.model.*;
+import com.example.sistTurnos.exception.*;
 import com.example.sistTurnos.repository.ClienteRepository;
 import com.example.sistTurnos.repository.JornadaLaboralRepository;
 import com.example.sistTurnos.repository.TipoTurnoRepository;
@@ -48,11 +45,11 @@ public class TurnoService {
     public TurnoDTOResponse asignarTurno(@org.jetbrains.annotations.NotNull TurnoDto turnoDto){
         //Busacar tipo de turno en BD
         TipoTurno tipoTurno = tipoTurnoRepository.findById(turnoDto.getIdTipoTurno())
-                .orElseThrow(() -> new RuntimeException("Tipo de turno no encontrado"));
+            .orElseThrow(() -> new TipoTurnoNoExistenteException("Tipo de turno no encontrado"));
 
         //Buscar Cliente por id
         Cliente clienteTurno = clienteRepository.findById(turnoDto.getIdCliente())
-                .orElseThrow(() -> new RuntimeException("Cliente no encontrado"));
+                .orElseThrow(() -> new ClienteNoExistenteException("Cliente no encontrado"));
         
         // Convertir el String de fechaHoraInicioTurno a LocalDateTime
         LocalDateTime fechaHoraInicio = LocalDateTime.parse(turnoDto.getFechaHoraInicioTurno());
@@ -88,8 +85,13 @@ public class TurnoService {
         };
         if (horarioEstaDisponible){
             turno.setTipoTurno(tipoTurno);
+            jornadaLaboral.getTurnosJornada().add(turno);
+            turno.setJornadaLaboral(jornadaLaboral);
             turnoRepository.save(turno);
-            return mapper.map(turno, TurnoDTOResponse.class);
+            TurnoDTOResponse response = mapper.map(turno, TurnoDTOResponse.class);
+            response.setNombreCliente(turno.getCliente().getNombre());
+            response.setNombreTipoTurno(turno.getTipoTurno().getNombreTipoTurno());
+            return response;
         }else{
             throw new HorarioNoDisponibleException("El horario seleccionado no está disponible.");
         }

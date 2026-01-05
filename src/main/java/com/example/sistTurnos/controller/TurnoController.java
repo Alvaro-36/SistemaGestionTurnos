@@ -12,11 +12,14 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.example.sistTurnos.dto.TurnoDto;
+import com.example.sistTurnos.exception.*;
+import com.example.sistTurnos.model.TipoTurno;
 
 
 @RestController
@@ -75,5 +78,23 @@ public class TurnoController {
     public ResponseEntity<TurnoDTOResponse> agendarTurno(@Valid @RequestBody TurnoDto nuevoTurno) {
         TurnoDTOResponse turnoAgendado = turnoService.asignarTurno(nuevoTurno);
         return ResponseEntity.status(HttpStatus.CREATED).body(turnoAgendado);
+    }
+
+    @ExceptionHandler(HorarioNoDisponibleException.class)
+    public ResponseEntity<com.example.sistTurnos.dto.ErrorResponse> handleHorarioNoDisponible(HorarioNoDisponibleException ex) {
+        // Devuelve un estado HTTP 409 (Conflict) y el mensaje de la excepción en JSON
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(new com.example.sistTurnos.dto.ErrorResponse(ex.getMessage()));
+    }
+
+    @ExceptionHandler(ClienteNoExistenteException.class)
+    public ResponseEntity<com.example.sistTurnos.dto.ErrorResponse> handleClienteNoExistente(ClienteNoExistenteException ex) {
+        // Devuelve un estado HTTP 409 (Conflict) y el mensaje de la excepción en JSON
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(new com.example.sistTurnos.dto.ErrorResponse(ex.getMessage()));
+    }
+
+    @ExceptionHandler(TipoTurnoNoExistenteException.class)
+    public ResponseEntity<com.example.sistTurnos.dto.ErrorResponse> handleTipoTurnoNoExistente(TipoTurnoNoExistenteException ex) {
+        // Devuelve un estado HTTP 409 (Conflict) y el mensaje de la excepción en JSON
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(new com.example.sistTurnos.dto.ErrorResponse(ex.getMessage()));
     }
 }

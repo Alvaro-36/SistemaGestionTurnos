@@ -13,9 +13,9 @@ public class TimeRange {
     private LocalTime endTime;
 
     public boolean includesDateTimeRange(TimeRange range) {
-        return this.startTime.isBefore(range.startTime) && this.endTime.isAfter(range.endTime);
+        return !this.startTime.isAfter(range.startTime) && !this.endTime.isBefore(range.endTime);
     }
     public boolean includesDateTime(LocalTime time) {
-        return this.startTime.isBefore(time) && this.endTime.isAfter(time);
+        return !this.startTime.isAfter(time) && !this.endTime.isBefore(time);
     }
 }
